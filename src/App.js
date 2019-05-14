@@ -7,44 +7,83 @@
  */
 
 //  import packages
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import AppIntroSlider from 'react-native-app-intro-slider';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+// import custom files
+import Welcome from './Welcome';
 
-type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
+// constants
+const slides = [
+	{
+		key: 'somethun',
+		title: 'Title 1',
+		text: 'Description.\nSay something cool',
+		// image: require('./assets/1.jpg'),
+		backgroundColor: '#59b2ab',
+	},
+	{
+		key: 'somethun-dos',
+		title: 'Title 2',
+		text: 'Other cool stuff',
+		// image: require('./assets/2.jpg'),
+		backgroundColor: '#febe29',
+	},
+	{
+		key: 'somethun1',
+		title: 'Rocket guy',
+		text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
+		// image: require('./assets/3.jpg'),
+		backgroundColor: '#22bcb5',
+	}
+];
+
+export default class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			showRealApp: false
+		}
+	}
+	_renderItem = (item) => {
+		return (
+			<View style={styles.slide}>
+				<Text style={styles.title}>{item.title}</Text>
+				<Image source={item.image} />
+				<Text style={style.text}>{item.text}</Text>
+			</View>
+		);
+	}
+	onDone = () => {
+		// User finished the introduction. Show real app through
+		// navigation or simply by controlling state
+		App.setState({ showRealApp: true }, () => console.warn(App.state.showRealApp));
+	}
+	render() {
+		if (this.state.showRealApp) {
+			return <Welcome />;
+		} else {
+			return <AppIntroSlider renderItem={App._renderItem} slides={slides} onDone={App.onDone} />;
+		}
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#F5FCFF',
+	},
+	welcome: {
+		fontSize: 20,
+		textAlign: 'center',
+		margin: 10,
+	},
+	instructions: {
+		textAlign: 'center',
+		color: '#333333',
+		marginBottom: 5,
+	},
 });
